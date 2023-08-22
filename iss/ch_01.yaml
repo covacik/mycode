@@ -1,0 +1,27 @@
+---
+- name: Query an Open API
+  hosts: localhost
+  connection: local
+
+  vars:
+      majortom: 'http://api.citybik.es/v2/networks'
+
+  tasks:
+  - name: Send an HTTP GET to API
+    uri:
+      method: GET
+      url: "{{ majortom }}"
+    register: data
+
+  - name: Use debug to show what is inside of our variable
+    debug:
+      msg: "{{ data }}"
+
+  - name: Slice the variable further to only return the JSON
+    debug:
+      msg: "{{ data.get('networks') }}"
+
+  - name: Use debug with a loop across the JSON data
+    debug:
+      msg: "On the {{ item }} is: {{ item }}"
+    loop: "{{ data.get('networks').get('name') }}"
